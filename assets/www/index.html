@@ -1,47 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        
-        <script src="js/libs/jquery-1.9.0/jquery.min.js"></script>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
-        <script src="js/feedTool.js"></script>
-        <title>Jornal da USP</title>       
-        <link rel="stylesheet" href="css/style.css" type="text/css">        
+<script src="js/libs/jquery-1.9.0/jquery.min.js"></script>
 
-        
-        <script>
-            localData=window.localStorage;
-            offset = 0;
-            limit=10;
-            limit_max=10;
-            $(document).ready(function() {
-                function loadFeed() {
-                    $('#feedDiv').html('Carregando ...');
-                    $('#feedDiv').getRss('http://espaber.uspnet.usp.br/jorusp/?feed=rss2',{limit: limit, offset: offset, limit_max: limit_max});
-                }
-                loadFeed();
-            });
-            
-        </script> 
-        <script type="text/javascript" src="cordova-2.6.0.js"></script> 
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </head>
-    <body>
-        <header>Jornal da USP</header>
-        <div id="feedDiv"></div>
-        <div class="divc2">TODO write content</div>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-    </body>
+<script src="js/feedTool.js"></script>
+<title>Jornal da USP</title>
+<link rel="stylesheet" href="css/style.css" type="text/css">
+
+
+<script>
+	localData = window.localStorage;
+	offset = 0;
+	limit = 10;
+	limit_max = 10;
+	$(document).ready(
+			function() {
+				function loadFeed() {
+					$('#feedDiv').html('Carregando ...');
+					$('#feedDiv').getRss(
+							'http://espaber.uspnet.usp.br/jorusp/?feed=rss2', {
+								limit : limit,
+								offset : offset,
+								limit_max : limit_max
+							});
+				}
+				loadFeed();
+			});
+</script>
+<script type="text/javascript" src="cordova-2.6.0.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+	app.initialize();
+</script>
+</head>
+<body>
+	<header class="header">
+		<h1>Jornal da USP</h1>
+<!-- 		<span style="color: red; font-size: 8">ONLINE</span>		 -->
+	</header>
+
+	<div id="feedDiv"></div>
+	<div class="divc2">TODO write content</div>
+	<div class="app">
+		<h1>Apache Cordova</h1>
+		<div id="deviceready" class="blink">
+			<p class="event listening">Connecting to Device</p>
+			<p class="event received">Device is Ready</p>
+		</div>
+	</div>
+</body>
 </html>
