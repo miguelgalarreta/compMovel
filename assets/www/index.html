@@ -7,30 +7,30 @@
 	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
 <script src="js/libs/jquery-1.9.0/jquery.min.js"></script>
+<script src="js/jquery.zrssfeed.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<link rel="stylesheet" href="js/jquery.mobile-1.1.0.min.css" />
+<script src="js/jquery.mobile-1.1.0.min.js"></script>
 
 <script src="js/feedTool.js"></script>
 <title>Jornal da USP</title>
 <link rel="stylesheet" href="css/style.css" type="text/css">
 
+<plugin name="Storage" value="org.apache.cordova.Storage" />
 
 <script>
-	localData = window.localStorage;
-	offset = 0;
-	limit = 10;
-	limit_max = 10;
-	$(document).ready(
-			function() {
-				function loadFeed() {
-					$('#feedDiv').html('Carregando ...');
-					$('#feedDiv').getRss(
-							'http://espaber.uspnet.usp.br/jorusp/?feed=rss2', {
-								limit : limit,
-								offset : offset,
-								limit_max : limit_max
-							});
-				}
-				loadFeed();
-			});
+	window.onload = function() {
+		localData = window.localStorage;
+		ncontent = 10;
+		ncontentMax = 10;
+		offset = 0;
+                
+		google.load("feeds", "1",{callback:loadRss});
+                //google.setOnLoadCallback(loadRss)
+		loadFeed(ncontent, ncontentMax, offset); //it works
+		
+		//loadFeed(ncontent, ncontentMax, offset); //it works
+	};
 </script>
 <script type="text/javascript" src="cordova-2.6.0.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
@@ -38,20 +38,47 @@
 	app.initialize();
 </script>
 </head>
-<body>
-	<header class="header">
-		<h1>Jornal da USP</h1>
-<!-- 		<span style="color: red; font-size: 8">ONLINE</span>		 -->
-	</header>
+<body>	
 
-	<div id="feedDiv"></div>
-	<div class="divc2">TODO write content</div>
-	<div class="app">
-		<h1>Apache Cordova</h1>
-		<div id="deviceready" class="blink">
-			<p class="event listening">Connecting to Device</p>
-			<p class="event received">Device is Ready</p>
+	<div id="contentDiv"></div>
+<!-- 	<div class="divc2">TODO write content</div> -->
+<!-- 	<div class="app"> -->
+<!-- 		<h1>Apache Cordova</h1> -->
+<!-- 		<div id="deviceready" class="blink"> -->
+<!-- 			<p class="event listening">Connecting to Device</p> -->
+<!-- 			<p class="event received">Device is Ready</p> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+
+
+
+	<div data-role="page" id="mainPage">
+
+		<div data-role="header" class="header">
+			<h1>Jornal da USP</h1>
 		</div>
+
+		<div data-role="content">
+			<div id="status"></div>
+			<ul id="linksList" data-role="listview" data-inset="true"></ul>
+		</div>
+
+		<div data-role="footer">
+			<h4>Jornal USP</h4>
+		</div>
+
+
+	</div>
+
+	<div data-role="page" id="contentPage">
+
+		<div data-role="header">
+			<a href="#mainPage" data-rel="back">Home</a>
+			<h1></h1>
+		</div>
+
+		<div data-role="content" id="entryText"></div>
+
 	</div>
 </body>
 </html>
