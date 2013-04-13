@@ -1,9 +1,169 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <script type="text/javascript" src="myScript.js"></script>
-    <link rel="stylesheet" type="text/css" href="mystyle.css">
-  </head>
-  <body>
-    Hello mi!
-  </body>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<!--<meta name="viewport"
+                content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+
+<script src="js/libs/jquery-1.9.0/jquery.min.js"></script>
+<script src="js/googleapi"></script>
+<!--        <script type="text/javascript" src="https://www.google.com/jsapi"></script>-->
+
+<title>Jornal da USP</title>
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<script type="text/javascript" src="cordova-2.6.0.js"></script>
+
+<script type="text/javascript" src="js/index.js"></script>
+
+
+<script type="text/javascript">
+	google.load("feeds", "1");//if it is not in the first line, it clean all!!!!
+	//window.onload = function() {
+	localData = window.localStorage;
+	ncontent = 10;
+	ncontentMax = 10;
+	offset = 0;
+	deviceReady=false;
+	feedReady=false;
+	console.log("starting");
+
+	var rssJornal = 'http://espaber.uspnet.usp.br/jorusp/?feed=rss2';
+
+	var containerContent = "contentDiv";
+
+	document.addEventListener("deviceready", onDeviceReady, false);
+	google.setOnLoadCallback(onFeedReady)
+	
+	function onFeedReady(){
+		feedReady=true;
+		if (deviceReady)
+			loadRssMk();
+	}
+
+	function onDeviceReady() {
+		//alert("ready");
+		//google.setOnLoadCallback(loadRssmk);
+		deviceReady=true;
+		if (feedReady)
+			loadRssmk();//assuming that it is loaded
+	}
+
+	function showEntry(titulo, link, contenido) {
+		var div = document.createElement("div");
+		$(
+				'<div>',
+				{
+					//id:
+					class : "entryDiv",
+					html : "<h2><a href=" + link + ">" + titulo + "</a></h2>"
+							+ contenido + "<br/>",
+				//style: "float: left; width :" + widthDiv + "px;"
+				//}).css({borderWidth: '6px'}).appendTo('#mosaicDiv');
+				}).appendTo('#' + containerContent);
+
+		//div.appendChild(document.createTextNode(titulo));                
+		//document.getElementById(containerContent).appendChild(div);
+
+	}
+
+	function feedLoaded(results) {
+		console.log("loading feed");
+		if (!results.error) {
+			console.log("not error");
+			document.getElementById(containerContent).innerHTML = "";
+			var feedrows = [];
+			var n = 0
+			for ( var i = 0; i < results.feed.entries.length; i++) {
+				var entry = results.feed.entries[i];
+
+				var ftitulo = entry.title;
+				var flink = entry.link;
+				var fcontenido = entry.content;
+
+				var row = ftitulo + "##" + flink + "##" + fcontenido + "##";
+				showEntry(ftitulo, flink, fcontenido);
+				feedrows[n++] = row;
+			}
+			window.localStorage.setItem("jornalUSP", feedrows.join(";"));//save rss
+		} else {
+			console.log("lecture error");
+			document.getElementById(containerContent).innerHTML = "erro de coneção";
+		}
+	}
+
+	function loadRssmk() {
+		//containerContent.innerHTML = "carregando...";
+		
+		document.getElementById(containerContent).innerHTML = "carregando...";
+		console.log("before rss");
+		//test internet connection                
+		var networkState = navigator.connection.type;
+		//alert("stado " + networkState);
+		//alert("none " + Connection.NONE);
+		if (networkState == Connection.NONE)//there is not connection
+		{			
+			console.log("no internet");
+			var rsscache=window.localStorage.getItem("jornalUSP");
+			if (rsscache==null)
+				alert("Sem coneção a internet nem dados armazenados na cache.")
+			alert("rsscache "+rsscache);
+			
+			
+		} else {//internet connection
+			var feed = new google.feeds.Feed(rssJornal);
+			feed.load(feedLoaded);
+		}
+	}
+
+	//loadFeed(ncontent, ncontentMax, offset); //it works
+	//};
+</script>
+
+</head>
+<body>
+
+
+	<!-- 	<div class="divc2">TODO write content</div> -->
+	<!-- 	<div class="app"> -->
+	<!-- 		<h1>Apache Cordova</h1> -->
+	<!-- 		<div id="deviceready" class="blink"> -->
+	<!-- 			<p class="event listening">Connecting to Device</p> -->
+	<!-- 			<p class="event received">Device is Ready</p> -->
+	<!-- 		</div> -->
+	<!-- 	</div> -->
+
+
+
+	<div data-role="page" id="mainPage">
+
+		<div data-role="header" class="header">
+			<h1>Jornal da USP</h1>
+		</div>
+
+		<div data-role="content">
+
+			<div id="status"></div>
+			<ul id="linksList" data-role="listview" data-inset="true"></ul>
+		</div>
+
+		<div data-role="footer">
+			<h4>Jornal USP</h4>
+		</div>
+
+
+	</div>
+
+	<div data-role="page" id="contentPage">
+		<div id="contentDiv"></div>
+		<div data-role="header">
+			<a href="#mainPage" data-rel="back">Home</a>
+			<h1></h1>
+		</div>
+
+		<div data-role="content" id="entryText"></div>
+
+	</div>
+	<!--         <script type="text/javascript" src="cordova-2.6.0.js"></script> -->
+</body>
 </html>
