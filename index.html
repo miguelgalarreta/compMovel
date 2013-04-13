@@ -24,8 +24,8 @@
 	ncontent = 10;
 	ncontentMax = 10;
 	offset = 0;
-	deviceReady=false;
-	feedReady=false;
+	deviceReady = false;
+	feedReady = false;
 	console.log("starting");
 
 	var rssJornal = 'http://espaber.uspnet.usp.br/jorusp/?feed=rss2';
@@ -34,9 +34,9 @@
 
 	document.addEventListener("deviceready", onDeviceReady, false);
 	google.setOnLoadCallback(onFeedReady)
-	
-	function onFeedReady(){
-		feedReady=true;
+
+	function onFeedReady() {
+		feedReady = true;
 		if (deviceReady)
 			loadRssMk();
 	}
@@ -44,7 +44,7 @@
 	function onDeviceReady() {
 		//alert("ready");
 		//google.setOnLoadCallback(loadRssmk);
-		deviceReady=true;
+		deviceReady = true;
 		if (feedReady)
 			loadRssmk();//assuming that it is loaded
 	}
@@ -81,11 +81,11 @@
 				var flink = entry.link;
 				var fcontenido = entry.content;
 
-				var row = ftitulo + "##" + flink + "##" + fcontenido + "##";
+				var row = ftitulo + "###" + flink + "###" + fcontenido + "###";
 				showEntry(ftitulo, flink, fcontenido);
 				feedrows[n++] = row;
 			}
-			window.localStorage.setItem("jornalUSP", feedrows.join(";"));//save rss
+			window.localStorage.setItem("jornalUSP", feedrows.join(";;;"));//save rss
 		} else {
 			console.log("lecture error");
 			document.getElementById(containerContent).innerHTML = "erro de coneção";
@@ -93,8 +93,7 @@
 	}
 
 	function loadRssmk() {
-		//containerContent.innerHTML = "carregando...";
-		
+		//containerContent.innerHTML = "carregando...";		
 		document.getElementById(containerContent).innerHTML = "carregando...";
 		console.log("before rss");
 		//test internet connection                
@@ -102,14 +101,24 @@
 		//alert("stado " + networkState);
 		//alert("none " + Connection.NONE);
 		if (networkState == Connection.NONE)//there is not connection
-		{			
+		{
 			console.log("no internet");
-			var rsscache=window.localStorage.getItem("jornalUSP");
-			if (rsscache==null)
-				alert("Sem coneção a internet nem dados armazenados na cache.")
-			alert("rsscache "+rsscache);
-			
-			
+			var rsscache = window.localStorage.getItem("jornalUSP");
+			if (rsscache == null)
+				alert("Sem coneção a internet nem dados armazenados na cache.");
+			else {
+				//alert(rsscache);
+				var feedArray = rsscache.split(";;;");
+				//alert(feedArray);
+				for ( var i in feedArray) {
+					var tagsArray = feedArray[i].split("###");
+					alert("feedA[0] "+feedArray[0]);
+					alert("tag0 "+tagsArray[0]);
+					//alert("tag1 "+tagsArray[1]);
+					showEntry(tagsArray[0], tagsArray[1], tagsArray[2]);
+				}
+			}
+
 		} else {//internet connection
 			var feed = new google.feeds.Feed(rssJornal);
 			feed.load(feedLoaded);
