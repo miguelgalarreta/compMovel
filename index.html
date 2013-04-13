@@ -42,8 +42,6 @@
 	}
 
 	function onDeviceReady() {
-		//alert("ready");
-		//google.setOnLoadCallback(loadRssmk);
 		deviceReady = true;
 		if (feedReady)
 			loadRssmk();//assuming that it is loaded
@@ -61,10 +59,6 @@
 				//style: "float: left; width :" + widthDiv + "px;"
 				//}).css({borderWidth: '6px'}).appendTo('#mosaicDiv');
 				}).appendTo('#' + containerContent);
-
-		//div.appendChild(document.createTextNode(titulo));                
-		//document.getElementById(containerContent).appendChild(div);
-
 	}
 
 	function feedLoaded(results) {
@@ -92,8 +86,7 @@
 		}
 	}
 
-	function loadRssmk() {
-		//containerContent.innerHTML = "carregando...";		
+	function loadRssmk() {		
 		document.getElementById(containerContent).innerHTML = "carregando...";
 		console.log("before rss");
 		//test internet connection                
@@ -106,19 +99,14 @@
 			var rsscache = window.localStorage.getItem("jornalUSP");
 			if (rsscache == null)
 				alert("Sem coneção a internet nem dados armazenados na cache.");
-			else {
-				//alert(rsscache);
-				var feedArray = rsscache.split(";;;");
-				//alert(feedArray);
+			else {				
+				document.getElementById(containerContent).innerHTML = "carregando...";
+				var feedArray = rsscache.split(";;;");				
 				for ( var i in feedArray) {
-					var tagsArray = feedArray[i].split("###");
-					alert("feedA[0] "+feedArray[0]);
-					alert("tag0 "+tagsArray[0]);
-					//alert("tag1 "+tagsArray[1]);
+					var tagsArray = feedArray[i].split("###");										
 					showEntry(tagsArray[0], tagsArray[1], tagsArray[2]);
 				}
 			}
-
 		} else {//internet connection
 			var feed = new google.feeds.Feed(rssJornal);
 			feed.load(feedLoaded);
@@ -128,15 +116,13 @@
 
 </head>
 <body>
-
 	<div data-role="page" id="mainPage">
-
 		<div data-role="header" class="headerJornal">
 			<h1>Jornal da USP</h1>
 		</div>
 
 		<div data-role="content">
-
+			<div id="contentDiv"></div>
 			<div id="status"></div>
 			<ul id="linksList" data-role="listview" data-inset="true"></ul>
 		</div>
@@ -144,19 +130,6 @@
 		<div data-role="footer">
 			<h4>Jornal USP</h4>
 		</div>
-
-
-	</div>
-
-	<div data-role="page" id="contentPage">
-		<div id="contentDiv"></div>
-		<div data-role="header">
-			<a href="#mainPage" data-rel="back">Home</a>
-			<h1></h1>
-		</div>
-
-		<div data-role="content" id="entryText"></div>
-
 	</div>
 	<!--         <script type="text/javascript" src="cordova-2.6.0.js"></script> -->
 </body>
