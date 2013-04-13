@@ -18,7 +18,7 @@
 
 
 <script type="text/javascript">
-	google.load("feeds", "1");
+	google.load("feeds", "1");//if it is not in the first line, it clean all!!!!
 	//window.onload = function() {
 	localData = window.localStorage;
 	ncontent = 10;
@@ -29,6 +29,14 @@
 	var rssJornal = 'http://espaber.uspnet.usp.br/jorusp/?feed=rss2';
 
 	var containerContent = "contentDiv";
+
+	document.addEventListener("deviceready", onDeviceReady, false);
+
+	function onDeviceReady() {
+		alert("ready");
+		//google.setOnLoadCallback(loadRssmk);
+		loadRssmk();//assuming that it is loaded
+	}
 
 	function showEntry(titulo, link, contenido) {
 		var div = document.createElement("div");
@@ -75,19 +83,23 @@
 
 	function loadRssmk() {
 		//containerContent.innerHTML = "carregando...";
+		
 		document.getElementById(containerContent).innerHTML = "carregando...";
 		console.log("before rss");
 		//test internet connection                
 		var networkState = navigator.connection.type;
+		alert("stado " + networkState);
+		alert("none " + Connection.NONE);
 		if (networkState == Connection.NONE)//there is not connection
 		{
+			alert("no internet")
 			console.log("no internet");
 		} else {//internet connection
 			var feed = new google.feeds.Feed(rssJornal);
 			feed.load(feedLoaded);
 		}
 	}
-	google.setOnLoadCallback(loadRssmk);
+
 	//loadFeed(ncontent, ncontentMax, offset); //it works
 	//};
 </script>
